@@ -2,17 +2,18 @@
 #include <WiFiClientSecure.h>
 
 // ==== WiFi Credentials ====
-const char* ssid = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid = ""; // Enter your own Hotspot name
+const char* password = ""; //  Enter your own Hotspot Password
 
 // ==== Telegram Credentials ====
-String BOT_TOKEN = "YOUR_BOT_TOKEN";  // Example: "123456789:ABCdefGhIJKlmNoPQRstuVWxyZ"
-String CHAT_ID = "YOUR_CHAT_ID";      // Example: "123456789"
+String BOT_TOKEN = "";  // Example: "123456789:ABCdefGhIJKlmNoPQRstuVWxyZ" //Enter your telegram Bot Token
+String CHAT_ID = "";      // Example: "123456789" // Enter your telegram Chat Id
 
 // ==== Sensor Pins ====
 #define TRIG D5
 #define ECHO D6
 #define BUZZER D7
+#define LED D4      // added LED pin
 
 WiFiClientSecure client;
 
@@ -21,8 +22,10 @@ void setup() {
   pinMode(TRIG, OUTPUT);
   pinMode(ECHO, INPUT);
   pinMode(BUZZER, OUTPUT);
+  pinMode(LED, OUTPUT);      // LED setup
 
   digitalWrite(BUZZER, LOW);
+  digitalWrite(LED, LOW);
 
   Serial.println();
   Serial.println("Connecting to WiFi...");
@@ -55,10 +58,12 @@ void loop() {
 
   if (distance < 20) {  // Motion Detected
     digitalWrite(BUZZER, HIGH);
+    digitalWrite(LED, HIGH);     // turn LED ON with buzzer
     sendTelegramMessage("⚠️ Motion Detected! Someone is near the sensor!");
     delay(2000);  // Alert delay
   } else {
     digitalWrite(BUZZER, LOW);
+    digitalWrite(LED, LOW);      // turn LED OFF when buzzer off
   }
 
   delay(1000);
