@@ -1,123 +1,89 @@
-# My-IoT-Projects
-📘 Theory – Home Security System Using ESP8266 & Ultrasonic Sensor
+# 🚨 ESP8266 Ultrasonic Security System with Telegram Alerts
 
-A home security system is an electronic setup designed to detect unauthorized entry or movement inside protected premises. Modern security systems incorporate IoT technologies to make monitoring efficient, automated, and remotely accessible. This project utilizes an ESP8266 microcontroller and an ultrasonic sensor to detect motion and send real-time alerts to the user via Telegram.
+This project uses an **ESP8266 (NodeMCU)** and an **HC-SR04 ultrasonic sensor** to create a real-time **security alert system**.  
+Whenever a person/object comes within **20 cm**, the system:
 
-1. Introduction
+- Activates a **buzzer**
+- Turns on an **LED**
+- Sends an instant **Telegram alert message** through your bot
 
-Smart security systems have become an essential part of modern homes. With continuous advancements in IoT and embedded systems, low-cost microcontrollers like the ESP8266 enable real-time monitoring and remote alert systems. Ultrasonic sensors detect movement by measuring the distance between the sensor and an object. If the measured distance changes abruptly or falls below a set threshold, it indicates possible motion.
+This makes it useful for **home security**, **door monitoring**, and **intrusion detection**.
 
-The ESP8266, with built-in Wi-Fi capability, processes the sensor data and triggers a notification through the internet, ensuring the user receives instant alerts on their smartphone.
+---
 
-2. Ultrasonic Sensor Working Principle
+## 🛠️ Features
 
-The HC-SR04 ultrasonic sensor operates on the principle of sound wave reflection.
+- 🔔 Buzzer + LED alert on motion detection  
+- 📲 Sends Telegram message using HTTPS  
+- 📡 Real-time distance monitoring  
+- 🔌 Simple wiring  
+- 🌐 Works through WiFi hotspot  
+- 🛡️ Uses secure TLS connection (`WiFiClientSecure`)
 
-✔ It emits high-frequency sound waves (40 kHz)
-✔ These waves reflect back after hitting an object
-✔ The sensor calculates the distance based on the time taken for the echo to return
+---
 
-Formula used:
-Distance (cm) = (Time × Speed of Sound) / 2
+## 📦 Hardware Required
 
+- ESP8266 NodeMCU  
+- HC-SR04 Ultrasonic Sensor  
+- Active Buzzer  
+- LED + 220Ω resistor  
+- Jumper wires  
+- Power supply / USB  
 
-Where:
+---
 
-speed of sound = approx. 343 m/s
+## 🔌 Wiring Diagram
 
-division by 2 accounts for the round-trip travel (sensor → object → sensor)
+### **HC-SR04 → ESP8266**
 
-3. ESP8266 Microcontroller Role
+| Sensor Pin | ESP8266 Pin |
+|-----------|-------------|
+| VCC       | 5V (or Vin) |
+| GND       | GND         |
+| TRIG      | D5          |
+| ECHO      | D6          |
 
-The ESP8266 is used as the control unit. It:
+> ⚠ The Echo pin outputs 5V. ESP8266 uses 3.3V logic. Although it often works, it is recommended to use a **1K + 2K voltage divider** on the ECHO line.
 
-✅ Reads the distance from the ultrasonic sensor
-✅ Compares the value with a predefined threshold
-✅ Detects intrusion or motion
-✅ Connects to Wi-Fi
-✅ Sends alert messages via Telegram bot API
-✅ Controls additional components such as buzzer or LED
+---
 
-Its Wi-Fi capability makes the device suitable for IoT-based security applications.
+### **Buzzer → ESP8266**
 
-4. Telegram Integration
+| Buzzer Pin | ESP8266 Pin |
+|-----------|-------------|
+| +         | D7          |
+| –         | GND         |
 
-Telegram offers a stable API that allows:
+---
 
-secure communication
+### **LED → ESP8266**
 
-fast message delivery
+| LED Pin | ESP8266 Pin |
+|---------|-------------|
+| + (Anode) | D4 |
+| – (Cathode) | GND (via 220Ω resistor) |
 
-easy bot creation
+---
 
-compatibility with microcontrollers
+## 📝 How It Works
 
-After creating a bot using BotFather, the ESP8266 sends an HTTP request to the Telegram API endpoint containing:
+1. ESP8266 connects to WiFi.
+2. HC-SR04 continuously measures distance.
+3. If distance < **20 cm**:
+   - Buzzer ON  
+   - LED ON  
+   - Telegram alert sent instantly  
+4. Otherwise:
+   - Buzzer OFF  
+   - LED OFF  
+5. Distance is printed on Serial Monitor.
 
-bot token
+---
 
-chat ID
+## 💬 Telegram Bot Setup
 
-alert message
-
-Example message:
-
-"Motion Detected! Object detected within 10 cm."
-
-This makes the alert system practical and real-time.
-
-5. System Workflow
-
-The ultrasonic sensor continuously measures distance.
-
-ESP8266 reads sensor data.
-
-A threshold distance (e.g., 10 cm) is checked.
-
-If distance < threshold → intrusion detected.
-
-ESP8266 activates a buzzer for alert.
-
-A message is sent to the user via Telegram.
-
-User receives notification instantly.
-
-6. Advantages of This IoT Security System
-
-🔹 Low cost & easy to build
-🔹 Real-time alerts
-🔹 Wireless communication
-🔹 Low power consumption
-🔹 High accuracy detection
-🔹 Works both indoors and outdoors
-🔹 Expandable (add camera, PIR sensor, GSM system)
-
-7. Limitations
-
-❌ Ultrasonic sensors are affected by:
-
-wind
-
-angle of object
-
-soft surfaces (poor reflection)
-
-❌ Wi-Fi availability is required
-❌ Range is limited to ~4 meters
-
-8. Future Improvements
-
-🔹 Add PIR motion sensor for improved accuracy
-🔹 Integrate ESP32-camera module for image capture
-🔹 Add battery backup with solar charging
-🔹 Connect to cloud platforms (Firebase, Blynk, Thingspeak)
-🔹 Use machine learning for intrusion pattern recognition
-
-If you want, I can also prepare:
-
-✅ README.md file
-✅ Project description for GitHub
-✅ Folder structure suggestions
-✅ Images/diagrams (schematic)
-✅ Usage instructions
-✅ License file (MIT recommended)
+1. Open Telegram → Search **BotFather**
+2. Create bot using `/newbot`
+3. Copy the **Bot Token**
+4. Get Chat ID:
